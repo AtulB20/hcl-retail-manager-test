@@ -61,4 +61,4 @@ Example Response
 }
 ```
 
-For detailed rest api documentation please refer [API DOC](/target/generated-docs/index.html)
+For detailed rest api documentation please build the project and goto /target/generated-docs/index.html
