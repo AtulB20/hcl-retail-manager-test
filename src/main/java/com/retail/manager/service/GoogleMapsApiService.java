@@ -30,7 +30,6 @@ public class GoogleMapsApiService {
 	
 	public GeoLocation getGeoLocation(Shop shop){
 		GeoLocation result = null;
-		//ResponseEntity<String> response = restTemplate.getForEntity(googleMapsUri, String.class, "1600+Amphitheatre+Parkway,+Mountain+View,+CA", googleMapsApiKey);
 		ResponseEntity<String> response = restTemplate.getForEntity(googleMapsUri, String.class, shop.getShopFullAddress(), googleMapsApiKey);
 		if (HttpStatus.OK == response.getStatusCode()) {
 			result = getLatLonFromJson(result, response);
