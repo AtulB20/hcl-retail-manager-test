@@ -37,8 +37,6 @@ public class RetailManagerPostController {
 		
 		Shop savedShop = shopRepository.save(shop);
 		
-		// maps api - get lat lon update shop with lat lon
-		
 		GeoLocation location = mapsApiService.getGeoLocation(savedShop);
 		
 		savedShop.setLocation(location);
@@ -49,16 +47,5 @@ public class RetailManagerPostController {
 			put("shopName", savedShop.getShopName());
 			put("shopAddress", savedShop.getShopAddress());
 		}};
-	}
-	
-	@RequestMapping(value = "/shops2", method = RequestMethod.GET)
-	public String addShops(){
-		
-		//System.out.println(shopRepository.findByShopName("test").getShopName());
-		
-		//System.out.println(shopRepository.findByShopName("test").getShopAddress().getNumber());
-		//System.out.println(shopRepository.findByShopName("test").getShopAddress().getPostCode());
-		
-		return null;//shopRepository.findByShopName("ABC").getShopName();
 	}
 }

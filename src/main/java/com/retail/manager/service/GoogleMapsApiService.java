@@ -48,7 +48,9 @@ public class GoogleMapsApiService {
 				JsonNode geo = res.path("geometry");
 				JsonNode lat = geo.path("location").path("lat");
 				JsonNode lon = geo.path("location").path("lng");
-				result = new GeoLocation(lat.textValue(), lon.textValue());
+				Double latitude = lat.asDouble();
+				Double longitude = lon.asDouble();
+				result = new GeoLocation(latitude, longitude);
 			}
 		} catch (IOException e) {
 			log.error(e.getMessage());

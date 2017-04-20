@@ -15,6 +15,8 @@ import javax.validation.constraints.NotNull;
 public class Shop {
 
 	public static final String VALIDATION_ERROR_MSG = "Validation failed in saving shop details. Shop name or address are incorrect";
+	public static final String NUMBER = "number";
+	public static final String POST_CODE = "postCode";
 	
 	@Id
 	@NotNull
@@ -31,6 +33,12 @@ public class Shop {
 	public Shop(String shopName, Map<String, String> shopAddress) {
 		this.shopName = shopName;
 		this.shopAddress = shopAddress;
+	}
+	
+	public Shop(String shopName, Map<String, String> shopAddress, GeoLocation location) {
+		this.shopName = shopName;
+		this.shopAddress = shopAddress;
+		this.location = location;
 	}
 
 	public String getShopName() {
@@ -59,11 +67,11 @@ public class Shop {
 	
 	public String getShopFullAddress(){
 		StringBuilder sb = new StringBuilder();  
-		sb.append(shopAddress.get("postCode"));
+		sb.append(shopAddress.get(POST_CODE));
 		sb.append("+");
 		sb.append(shopName);
 		sb.append("+");
-		sb.append(shopAddress.get("number"));
+		sb.append(shopAddress.get(NUMBER));
 		return sb.toString();  
 	}
 }

@@ -2,30 +2,30 @@ package com.retail.manager.domain;
 
 public class GeoLocation {
 
-	private String latitude;
-	private String longitude;
+	private Double latitude;
+	private Double longitude;
 	
 	public GeoLocation() {
 	}
 	
-	public GeoLocation(String latitude, String longitude) {
+	public GeoLocation(Double latitude, Double longitude) {
 		this.setLatitude(latitude);
 		this.setLongitude(longitude);
 	}
 
-	public String getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(String longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
-	public String getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(String latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 }

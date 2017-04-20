@@ -10,7 +10,7 @@ public class JsonSyntaxHighlighter implements ContentModifier {
 	@Override
 	public byte[] modifyContent(byte[] content, MediaType arg1) {
 		byte[] end = "\n----\n\n".getBytes();
-		byte[] start = ("[source,josn,options=\"nowrap\"]\n" + "----\n").getBytes();
+		byte[] start = ("[source,json,options=\"nowrap\"]\n" + "----\n").getBytes();
 		ByteBuffer byteBuffer = ByteBuffer.allocate(start.length + content.length + end.length);
 		return byteBuffer.put(end).put(start).put(content).array();
 	}

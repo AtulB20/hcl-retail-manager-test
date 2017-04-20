@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.retail.manager.domain.GeoLocation;
 import com.retail.manager.domain.Shop;
 
 /**
@@ -15,7 +16,9 @@ public class ShopBuilder {
 
 	private String shopName;
 	private Map<String, String> shopAddress;
-
+	@SuppressWarnings("unused")
+	private GeoLocation geoLocation;
+	
 	public ShopBuilder shopName(String shopName) {
 		this.shopName = shopName;
 		return this;
@@ -25,9 +28,14 @@ public class ShopBuilder {
 		this.shopAddress = shopAddress;
 		return this; 
 	}
+	
+	public ShopBuilder geoLocation(Double lat, Double lng) {
+		this.geoLocation = new GeoLocation(lat, lng);
+		return this;
+	}
 
 	public Shop build(){
-		return new Shop(shopName, shopAddress);
+		return new Shop(shopName, shopAddress, geoLocation);
 	}
 	
 	@SuppressWarnings("serial")

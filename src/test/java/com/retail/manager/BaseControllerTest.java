@@ -5,6 +5,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.removeHeaders;
 
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -13,17 +14,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.ContentModifyingOperationPreprocessor;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.retail.manager.service.ShopRepository;
+
 @RunWith(SpringRunner.class)
+@ActiveProfiles("test")
 @SpringBootTest
-@AutoConfigureRestDocs(outputDir = "target\\generated-snippets")
+@AutoConfigureRestDocs(outputDir = "target/generated-snippets")
 @AutoConfigureMockMvc
 public abstract class BaseControllerTest {
 
 	@Autowired
 	protected MockMvc mockMvc;
+
+	@Autowired
+	protected ShopRepository repository;
+	
+	@Before
+	public void setup(){
+		repository.deleteAll();
+	}
 	
 	protected RestDocumentationResultHandler restDoc(String name){
 		ContentModifyingOperationPreprocessor jsonSource = new ContentModifyingOperationPreprocessor(new JsonSyntaxHighlighter());
