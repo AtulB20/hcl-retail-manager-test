@@ -7,11 +7,11 @@
 
 Example request
 
-```
 POST /shops
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 
+```
 {
     "shopName" : "BigBasket",
     "shopAddress" : {
@@ -42,10 +42,8 @@ Example Response
 
 Example request
 
-```
 GET /shops/lat/18.554994/lng/73.953224/nearest
 Accept: application/json
-```
 
 Example Response
 
@@ -63,4 +61,4 @@ Example Response
 }
 ```
 
-For detailed rest api documentation please refer /target/generated-docs/index.html
+For detailed rest api documentation please refer [API DOC](/target/generated-docs/index.html)
