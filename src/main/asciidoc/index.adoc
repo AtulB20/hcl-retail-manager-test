@@ -1,0 +1,29 @@
+= Retail manager api documentation.
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[introduction]
+= Introduction
+  
+A Retail Manager is a RESTful web service for keeping track of shops
+
+[[resources-add-shop]]
+== Save Metadata
+
+=== Insert New Shop in Inventory
+
+A `POST` request used to insert New Shop
+
+=== Example request
+
+include::{snippets}\addNewShop\http-request.adoc[]
+
+include::{snippets}\addNewShop\curl-request.adoc[]
+
+=== Example Response
+
+include::{snippets}\addNewShop\http-response.adoc[]
