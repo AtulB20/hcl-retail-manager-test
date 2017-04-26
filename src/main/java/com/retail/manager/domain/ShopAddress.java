@@ -1,9 +1,18 @@
 package com.retail.manager.domain;
 
-public class ShopAddress {
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+@Entity
+public class ShopAddress implements Serializable {
 
 	private String number;
 	private String postCode;
+	private Shop shop;
 	
 	public ShopAddress() {
 	}
@@ -24,5 +33,16 @@ public class ShopAddress {
 	}
 	public void setPostCode(String postCode) {
 		this.postCode = postCode;
+	}
+	
+	@Id
+    @OneToOne
+    @JoinColumn(name = "shop_id")
+	public Shop getShop() {
+		return shop;
+	}
+
+	public void setShop(Shop shop) {
+		this.shop = shop;
 	}
 }

@@ -1,12 +1,18 @@
 package com.retail.manager.service;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.Repository;
 
 import com.retail.manager.domain.Shop;
 
-@Repository
-public interface ShopRepository extends MongoRepository<Shop, Long> {
+public interface ShopRepository extends JpaRepository<Shop, Long> {
 
-	Shop findByShopName(String shopName);
+	/*Shop save(Shop shop);
+    
+	List<Shop> findAll();
+*/
+    Shop findByShopName(String shopName);
+
 }

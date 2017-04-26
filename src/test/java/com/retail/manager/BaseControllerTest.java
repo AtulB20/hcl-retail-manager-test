@@ -35,7 +35,7 @@ public abstract class BaseControllerTest {
 	
 	@Before
 	public void setup(){
-		repository.deleteAll();
+		//repository..deleteAll();
 	}
 	
 	protected RestDocumentationResultHandler restDoc(String name){

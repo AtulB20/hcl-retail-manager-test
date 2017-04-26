@@ -1,30 +1,35 @@
 package com.retail.manager.domain;
 
-import java.util.Map;
+import java.io.Serializable;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-/**
- * @author Atul
- *
- */
-@Document(collection = "retailShops")
-public class Shop {
+@Entity
+public class Shop implements Serializable {
 
 	public static final String VALIDATION_ERROR_MSG = "Validation failed in saving shop details. Shop name or address are incorrect";
 	public static final String NUMBER = "number";
 	public static final String POST_CODE = "postCode";
 	
 	@Id
+	@GeneratedValue
+	private Long id;
+	
 	@NotNull
 	private String shopName;
 
 	@NotNull
 	private ShopAddress shopAddress;
 
+	@Column(nullable = true)
 	private GeoLocation location;
 	
 	public Shop() {
@@ -49,6 +54,7 @@ public class Shop {
 		this.shopName = shopName;
 	}
 
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "shop")
 	public ShopAddress getShopAddress() {
 		return shopAddress;
 	}
@@ -57,6 +63,7 @@ public class Shop {
 		this.shopAddress = shopAddress;
 	}
 
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "shop")
 	public GeoLocation getLocation() {
 		return location;
 	}

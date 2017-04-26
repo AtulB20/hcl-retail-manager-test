@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.retail.manager.domain.Shop;
+import com.retail.manager.domain.ShopAddress;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
