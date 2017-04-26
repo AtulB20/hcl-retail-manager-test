@@ -23,19 +23,19 @@ public class Shop {
 	private String shopName;
 
 	@NotNull
-	private Map<String, String> shopAddress;
+	private ShopAddress shopAddress;
 
 	private GeoLocation location;
 	
 	public Shop() {
 	}
 
-	public Shop(String shopName, Map<String, String> shopAddress) {
+	public Shop(String shopName, ShopAddress shopAddress) {
 		this.shopName = shopName;
 		this.shopAddress = shopAddress;
 	}
 	
-	public Shop(String shopName, Map<String, String> shopAddress, GeoLocation location) {
+	public Shop(String shopName, ShopAddress shopAddress, GeoLocation location) {
 		this.shopName = shopName;
 		this.shopAddress = shopAddress;
 		this.location = location;
@@ -49,11 +49,11 @@ public class Shop {
 		this.shopName = shopName;
 	}
 
-	public Map<String, String> getShopAddress() {
+	public ShopAddress getShopAddress() {
 		return shopAddress;
 	}
 
-	public void setShopAddress(Map<String, String> shopAddress) {
+	public void setShopAddress(ShopAddress shopAddress) {
 		this.shopAddress = shopAddress;
 	}
 
@@ -67,11 +67,11 @@ public class Shop {
 	
 	public String getShopFullAddress(){
 		StringBuilder sb = new StringBuilder();  
-		sb.append(shopAddress.get(POST_CODE));
+		sb.append(shopAddress.getPostCode());
 		sb.append("+");
 		sb.append(shopName);
 		sb.append("+");
-		sb.append(shopAddress.get(NUMBER));
+		sb.append(shopAddress.getNumber());
 		return sb.toString();  
 	}
 }

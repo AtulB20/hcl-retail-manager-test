@@ -2,16 +2,20 @@ package com.retail.manager.service;
 
 import java.io.IOException;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.maps.DistanceMatrixApi;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DistanceMatrix;
+import com.google.maps.model.GeocodingResult;
+import com.google.maps.model.LatLng;
 import com.retail.manager.domain.GeoLocation;
 import com.retail.manager.domain.Shop;
 
@@ -19,42 +23,53 @@ import com.retail.manager.domain.Shop;
 public class GoogleMapsApiService {
 
 	private final Logger log = LoggerFactory.getLogger(GoogleMapsApiService.class);
-	
-	@Value("${google.maps.uri}")
-	private String googleMapsUri;
-	
+
 	@Value("${google.maps.apiKey}")
 	private String googleMapsApiKey;
-	
-	private RestTemplate restTemplate = new RestTemplate();
-	
-	public GeoLocation getGeoLocation(Shop shop){
-		GeoLocation result = null;
-		//ResponseEntity<String> response = restTemplate.getForEntity(googleMapsUri, String.class, "1600+Amphitheatre+Parkway,+Mountain+View,+CA", googleMapsApiKey);
-		ResponseEntity<String> response = restTemplate.getForEntity(googleMapsUri, String.class, shop.getShopFullAddress(), googleMapsApiKey);
-		if (HttpStatus.OK == response.getStatusCode()) {
-			result = getLatLonFromJson(result, response);
-	    } else {
-	        log.error(response.getBody()); 
-	    }
-		return result;
+
+	GeoApiContext context = null;
+
+	@Autowired
+	public void setContext() {
+		context = new GeoApiContext().setApiKey(googleMapsApiKey);
 	}
 
-	private GeoLocation getLatLonFromJson(GeoLocation result, ResponseEntity<String> response) {
-		ObjectMapper mapper = new ObjectMapper();
+	public GeoLocation getGeoLocation(Shop shop) {
+		GeoLocation result = null;
 		try {
-			JsonNode data = mapper.readTree(response.getBody().toString());	
-			for(JsonNode res: data.path("results")){
-				JsonNode geo = res.path("geometry");
-				JsonNode lat = geo.path("location").path("lat");
-				JsonNode lon = geo.path("location").path("lng");
-				Double latitude = lat.asDouble();
-				Double longitude = lon.asDouble();
-				result = new GeoLocation(latitude, longitude);
-			}
-		} catch (IOException e) {
+			GeocodingResult[] results = GeocodingApi.newRequest(context).address(shop.getShopFullAddress()).await();
+
+			Validate.notEmpty(results);
+			Validate.notNull(results[0].geometry);
+			Validate.notNull(results[0].geometry.location);
+			Validate.notNull(results[0].geometry.location.lat);
+			Validate.notNull(results[0].geometry.location.lng);
+
+			result = new GeoLocation(results[0].geometry.location.lat, results[0].geometry.location.lng);
+
+		} catch (ApiException | InterruptedException | IOException e) {
 			log.error(e.getMessage());
 		}
 		return result;
 	}
+	
+	public long getDistance(GeoLocation origin, GeoLocation destination){
+		long result = Long.MAX_VALUE;
+		try {
+			DistanceMatrix matrix = DistanceMatrixApi.newRequest(context)
+			        .origins(new LatLng(origin.getLatitude(), origin.getLongitude()))
+			        .destinations(new LatLng(destination.getLatitude(), destination.getLongitude()))
+			        .await();
+			
+			Validate.notNull(matrix);
+			Validate.notEmpty(matrix.rows);
+			Validate.notEmpty(matrix.rows[0].elements);
+			Validate.notNull(matrix.rows[0].elements[0].distance);
+			result = matrix.rows[0].elements[0].distance.inMeters;
+		} catch (ApiException | InterruptedException | IOException e) {
+			log.error(e.getMessage());
+		}
+		return result;
+	}
+	
 }

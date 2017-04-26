@@ -5,14 +5,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.HashMap;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.ResultActions;
+
+import com.retail.manager.domain.ShopAddress;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -21,11 +21,7 @@ public class RetailManagerPostControllerTests extends BaseControllerTest{
 	@SuppressWarnings("serial")
 	@Test
 	public void shouldSaveShopDetails() throws Exception {
-		HashMap<String, String> shopAdd = new HashMap<String, String>(){{
-			put("number", "1123 443");
-			put("postCode", "411 014");
-		}};
-		String payload = new ShopBuilder().shopName("BigBasket").shopAddress(shopAdd).buildAsJson();
+		String payload = new ShopBuilder().shopName("Raymond Retail Shop").shopAddress("1248/A, East Street, Cawasvilla, Opposite Wonderland, Cawasvilla, Pune", "411001").buildAsJson();
 		
 		ResultActions result = mockMvc.perform(post("/shops")
 				.content(payload)
@@ -33,7 +29,7 @@ public class RetailManagerPostControllerTests extends BaseControllerTest{
 				.accept(MediaType.APPLICATION_JSON));
 		
 		result.andExpect(status().isOk())
-			.andExpect(jsonPath("$.shopName", equalTo("BigBasket")))
+			.andExpect(jsonPath("$.shopName", equalTo("Raymond Retail Shop")))
 			.andDo(restDoc("addNewShop"));
 	}
 

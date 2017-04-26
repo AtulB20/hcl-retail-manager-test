@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.retail.manager.domain.GeoLocation;
 import com.retail.manager.domain.Shop;
+import com.retail.manager.service.GoogleMapsApiService;
 import com.retail.manager.service.ShopRepository;
-import com.retail.manager.utils.DistanceCalculator;
 
 @RestController
 public class RetailManagerGetController {
@@ -27,6 +27,9 @@ public class RetailManagerGetController {
 	@Autowired
 	private ShopRepository shopRepository;
 	
+	@Autowired
+	private GoogleMapsApiService mapsApiService;
+	
 	@SuppressWarnings("serial")
 	@RequestMapping(value = "/shops/lat/{latitude}/lng/{longitude}/nearest", method = {RequestMethod.GET } )
 	public Map<String, Object> getShop(@PathVariable String latitude, @PathVariable String longitude){
@@ -35,20 +38,16 @@ public class RetailManagerGetController {
 		
 		List<Shop> allShops = shopRepository.findAll();
 		
-		Map<Shop, Double> distances = allShops.stream()
+		Map<Shop, Long> distances = allShops.stream()
 				.filter(f -> f != null)
-				.collect(Collectors.toMap(shop->shop, shop -> {return distance(customerLocation, shop.getLocation());}));
+				.collect(Collectors.toMap(shop->shop, shop -> {return mapsApiService.getDistance(customerLocation, shop.getLocation());}));
 		
-		Entry<Shop, Double> nearestShop = Collections.min(distances.entrySet(), Comparator.comparingDouble(Entry::getValue));
+		Entry<Shop, Long> nearestShop = Collections.min(distances.entrySet(), Comparator.comparingDouble(Entry::getValue));
 		
 		return new HashMap<String, Object>(){{
 			put("shopName", nearestShop.getKey().getShopName());
 			put("shopAddress", nearestShop.getKey().getShopAddress());
 			put("location", nearestShop.getKey().getLocation());
 		}};
-	}
-	
-	private double distance(GeoLocation source, GeoLocation destination) {
-		return DistanceCalculator.distance(destination.getLatitude(), destination.getLongitude(), source.getLatitude(), source.getLongitude(), UNIT);
 	}
 }
