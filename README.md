@@ -13,11 +13,11 @@ Accept: application/json
 
 ```
 {
-    "shopName" : "BigBasket",
-    "shopAddress" : {
-        "number" : "1123 443",
-        "postCode" : "411 014"
-    }
+  "shopName" : "Raymond Retail Shop",
+  "shopAddress" : {
+    "number" : "1248/A, East Street, Cawasvilla, Opposite Wonderland, Cawasvilla, Pune",
+    "postCode" : "411001"
+  }
 }
 ```
 
@@ -25,20 +25,30 @@ Example Response
 
 ```
 {
-    "shopName" : "Superdry",
-    "location" : {
-        "latitude" : 18.5635752,
-        "longitude" : 73.9176313
-    },
-    "shopAddress" : {
-        "number" : "Phoenix Market City, 20, Viman Nagar Rd, Clover Park, Viman Nagar, Pune",
-        "postCode" : "411014"
-    }
+  "message" : "Successfully saved shop details",
+  "shopName" : "Raymond Retail Shop",
+  "shopAddress" : {
+    "number" : "1248/A, East Street, Cawasvilla, Opposite Wonderland, Cawasvilla, Pune",
+    "postCode" : "411001"
+  }
 }
 ```
 
+Example response when shop details is replaced
 
-### A GET request used to find nearest shop
+```
+json{
+  "message" : "Current Version replaced Previous version successfully",
+  "shopName" : "Raymond Retail Shop",
+  "shopAddress" : {
+    "number" : "1248/A, East Street, Cawasvilla, Opposite Wonderland, Pune",
+    "postCode" : "411001"
+  }
+}
+
+```
+
+### A GET request to find nearest shop
 
 Example request
 
@@ -49,16 +59,28 @@ Example Response
 
 ```
 {
-    "shopName" : "Superdry",
-    "location" : {
-        "latitude" : 18.5635752,
-        "longitude" : 73.9176313
-    },
-    "shopAddress" : {
-        "number" : "Phoenix Market City, 20, Viman Nagar Rd, Clover Park, Viman Nagar, Pune",
-        "postCode" : "411014"
-    }
+  "shopName" : "Superdry",
+  "shopAddress" : {
+    "number" : "Phoenix Market City, 20, Viman Nagar Rd, Clover Park, Viman Nagar, Pune",
+    "postCode" : "411014"
+  },
+  "location" : {
+    "latitude" : "18.5635752",
+    "longitude" : "73.9176313"
+  },
+  "distance" : "6466 meters"
 }
 ```
+
+Example response when error url
+
+```
+{
+  "status" : "error",
+  "message" : "Requested url is not valid"
+}
+```
+
+
 
 For detailed rest api documentation please build the project and goto /target/generated-docs/index.html
