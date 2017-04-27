@@ -18,6 +18,7 @@ import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 import com.retail.manager.domain.GeoLocation;
 import com.retail.manager.domain.Shop;
+import com.retail.manager.exception.InvalidShopDetailsException;
 
 @Service
 public class GoogleMapsApiService {
@@ -34,42 +35,46 @@ public class GoogleMapsApiService {
 		context = new GeoApiContext().setApiKey(googleMapsApiKey);
 	}
 
-	public GeoLocation getGeoLocation(Shop shop) {
-		GeoLocation result = null;
+	public GeoLocation getGeoLocation(Shop shop) throws InvalidShopDetailsException {
+		GeocodingResult[] results = null;
 		try {
-			GeocodingResult[] results = GeocodingApi.newRequest(context).address(shop.getShopFullAddress()).await();
-
-			Validate.notEmpty(results);
-			Validate.notNull(results[0].geometry);
-			Validate.notNull(results[0].geometry.location);
-			Validate.notNull(results[0].geometry.location.lat);
-			Validate.notNull(results[0].geometry.location.lng);
-
-			result = new GeoLocation(results[0].geometry.location.lat, results[0].geometry.location.lng);
-
+			log.info("Getting coordinates for the shop: " + shop.getShopName());
+			results = GeocodingApi.newRequest(context).address(shop.getShopFullAddress()).await();
 		} catch (ApiException | InterruptedException | IOException e) {
-			log.error(e.getMessage());
+			log.error("Error getting coordinates for the shop: " + shop.getShopName());
+			e.printStackTrace();
 		}
-		return result;
+
+		Validate.notEmpty(results);
+		log.info("Got geo api response: " + results.toString());
+		Validate.notNull(results[0].geometry);
+		Validate.notNull(results[0].geometry.location);
+		Validate.notNull(results[0].geometry.location.lat);
+		Validate.notNull(results[0].geometry.location.lng);
+
+		return new GeoLocation(results[0].geometry.location.lat, results[0].geometry.location.lng);
 	}
-	
-	public long getDistance(GeoLocation origin, GeoLocation destination){
+
+	public long getDistance(GeoLocation origin, GeoLocation destination) {
 		long result = Long.MAX_VALUE;
 		try {
+			log.info("Calculating distance between source & destination");
 			DistanceMatrix matrix = DistanceMatrixApi.newRequest(context)
-			        .origins(new LatLng(origin.getLatitude(), origin.getLongitude()))
-			        .destinations(new LatLng(destination.getLatitude(), destination.getLongitude()))
-			        .await();
+					.origins(new LatLng(origin.getLatitude(), origin.getLongitude()))
+					.destinations(new LatLng(destination.getLatitude(), destination.getLongitude())).await();
 			
 			Validate.notNull(matrix);
 			Validate.notEmpty(matrix.rows);
 			Validate.notEmpty(matrix.rows[0].elements);
 			Validate.notNull(matrix.rows[0].elements[0].distance);
 			result = matrix.rows[0].elements[0].distance.inMeters;
-		} catch (ApiException | InterruptedException | IOException e) {
+		} catch (InterruptedException | IOException | ApiException e) {
+			log.error("Error calcuating distance between source & destination");
+			log.error("Source: latitude=" + origin.getLatitude() + " longitude=" + origin.getLongitude());
+			log.error("Destination: latitude=" + destination.getLatitude() + " longitude=" + destination.getLongitude());
 			log.error(e.getMessage());
 		}
 		return result;
 	}
-	
+
 }

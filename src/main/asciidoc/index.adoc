@@ -12,7 +12,7 @@
 A Retail Manager is a RESTful web service for keeping track of shops
 
 [[resources-add-shop]]
-=== Insert New Shop in Inventory
+== Insert New Shop in Inventory
 
 A `POST` request used to insert New Shop
 
@@ -22,13 +22,17 @@ include::{snippets}\addNewShop\http-request.adoc[]
 
 include::{snippets}\addNewShop\curl-request.adoc[]
 
-=== Example Response
+=== Example response
 
 include::{snippets}\addNewShop\http-response.adoc[]
 
+=== Example response when shop details is replaced
+
+include::{snippets}\replaceOldShop\http-response.adoc[]
+
 
 [[resources-get-shop]]
-=== Find nearest shop using geo location
+== Find nearest shop using GEO API
 
 A `GET` request used to find nearest shop
 
@@ -38,6 +42,20 @@ include::{snippets}\findNearestShop\http-request.adoc[]
 
 include::{snippets}\findNearestShop\curl-request.adoc[]
 
-=== Example Response
+=== Example response
 
 include::{snippets}\findNearestShop\http-response.adoc[]
+
+=== Example response when latitude is missing
+
+include::{snippets}\latitudeError\http-response.adoc[]
+
+=== Example response when longitude is missing
+
+include::{snippets}\longitudeError\http-response.adoc[]
+
+=== Example response when error url
+
+include::{snippets}\error\http-response.adoc[]
+
+

@@ -1,32 +1,36 @@
 package com.retail.manager.exception;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ValidationException;
 
-import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.ModelAndView;
+
+import com.google.maps.errors.ApiException;
 
 @ControllerAdvice
 class GlobalDefaultExceptionHandler {
-	
+
 	public static final String DEFAULT_ERROR_VIEW = "error";
 
-	@ExceptionHandler(value = Exception.class)
-	public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-		// If the exception is annotated with @ResponseStatus rethrow it and let
-		// the framework handle it - like the OrderNotFoundException example
-		// at the start of this post.
-		// AnnotationUtils is a Spring Framework utility class.
-		if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null)
-			throw e;
-
-		// Otherwise setup and send the user to a default error-view.
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("exception", e);
-		mav.addObject("url", req.getRequestURL());
-		mav.setViewName(DEFAULT_ERROR_VIEW);
-		return mav;
+	@ExceptionHandler(value = {InvalidShopDetailsException.class, InvalidCoordinatesException.class, ValidationException.class})
+	public ResponseEntity<ErrorInfo> badRequestExceptionHandler(Exception e){
+		ErrorInfo errorInfo = new ErrorInfo(DEFAULT_ERROR_VIEW, e.getMessage());
+		return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.BAD_REQUEST);
 	}
-}
+	
+	@ExceptionHandler(value = {ApiException.class, NoNearbyShopsFoundException.class})
+	public ResponseEntity<ErrorInfo> noDetailsForInputArguments(Exception e){
+		ErrorInfo errorInfo = new ErrorInfo(DEFAULT_ERROR_VIEW, e.getMessage());
+		return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.NO_CONTENT);
+	}	
+	
+	@ExceptionHandler(value = Exception.class)
+	public ResponseEntity<ErrorInfo> defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+		ErrorInfo errorInfo = new ErrorInfo(DEFAULT_ERROR_VIEW, e.getMessage());
+		return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.NOT_FOUND);
+	}
+
+} 

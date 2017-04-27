@@ -3,6 +3,7 @@ package com.retail.manager;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.retail.manager.domain.GeoLocation;
@@ -41,9 +42,7 @@ public class ShopBuilder {
 	@SuppressWarnings("serial")
 	public String buildAsJson() throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
-		
-		//W//apper.writerWithDefaultPrettyPrinter().writeValueAsString(build());
-		
+		mapper.setSerializationInclusion(Include.NON_NULL);
 		Map<String, Object> obj = new HashMap<String, Object>(){{
 			if(shopName != null) put("shopName", shopName);
 			if(shopAddress != null) put("shopAddress", shopAddress);

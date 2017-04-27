@@ -10,6 +10,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class ShopAddress implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private String number;
 	private String postCode;
 	private Shop shop;

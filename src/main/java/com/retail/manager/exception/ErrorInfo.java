@@ -1,11 +1,11 @@
 package com.retail.manager.exception;
 
 public class ErrorInfo {
-	public final String url;
-    public final String ex;
+	public final String status;
+    public final String message;
 
-    public ErrorInfo(String url, Exception ex) {
-        this.url = url;
-        this.ex = ex.getLocalizedMessage();
+    public ErrorInfo(String status, String message) {
+        this.status = status;
+        this.message = message;
     }
 }

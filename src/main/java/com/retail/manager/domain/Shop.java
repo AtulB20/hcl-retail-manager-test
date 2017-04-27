@@ -7,17 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class Shop implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	public static final String VALIDATION_ERROR_MSG = "Validation failed in saving shop details. Shop name or address are incorrect";
-	public static final String NUMBER = "number";
-	public static final String POST_CODE = "postCode";
 	
 	@Id
 	@GeneratedValue
